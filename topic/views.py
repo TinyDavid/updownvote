@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .forms import TopicForm
-from operator import itemgetter
+from django.views.decorators.csrf import csrf_exempt
+
 # Create your views here.
 
 topic_list = list() # global variable topic list to store all post topics
@@ -31,3 +32,18 @@ def topic(request):
         'form':form
     }
     return render(request,template,context)
+
+@csrf_exempt
+def vote(request):
+    if request.method == 'POST':
+        voted_topic_id = int(request.POST.get("id"))
+        vote_type = request.POST.get("type")
+        voted_topic_index = next(index for (index, d) in enumerate(topic_list) if d["id"] == voted_topic_id)
+        if vote_type =="positive":
+            topic_list[voted_topic_index]['votes']+=1
+        elif vote_type =="negative":
+            topic_list[voted_topic_index]['votes']-=1
+        else:
+            return HttpResponse('error-unknown vote type')
+        voted_topic_votes = topic_list[voted_topic_index]['votes']
+        return HttpResponse(voted_topic_votes)
