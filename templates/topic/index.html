@@ -20,12 +20,10 @@
   <body>
       
     <div class="container">
-    <form action="#" method="post">
-      <div class="form-group">
-        <label for="topicContent">Your Topic</label>
-        <textarea class="form-control" id="topicContent" rows="2"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">Publis Your Topic</button>
+    <form action="/" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="btn btn-primary" value="Post Your Topic" />
     </form>
     </div>
 
