@@ -9,6 +9,10 @@
 
     <!-- Bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom css-->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'topic/style.css' %}" />
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,13 +23,32 @@
   </head>
   <body>
       
-    <div class="container">
-    {{topic_list}}
-    <form action="/" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" class="btn btn-primary" value="Post Your Topic" />
-    </form>
+    <div class="container">        
+        {{topic_list}}
+        <div id="topics" class="topics">
+            <table class="table">
+              <tbody>
+                {% for topic in topic_list %}
+                <tr class="info">
+                  <td class="col-md-1 votecell" style="text-align: center;" >
+                    <div class="votes" topic-id="{{topic.id}}">
+                        <a class="glyphicon glyphicon-chevron-up vote-up" title="This topic is useful"></a>
+                        <span class="label label-primary num">{{topic.votes}}</span>
+                        <a class="glyphicon glyphicon-chevron-down vote-down" title="This topic is not useful"></a>
+                    </div>
+                  </td>
+                  <td class="topiccell">{{topic.topic}}</td>
+                </tr>
+
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+        <form action="/" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" class="btn btn-primary" value="Post Your Topic" />
+        </form>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
