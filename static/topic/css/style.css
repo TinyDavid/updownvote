@@ -1,3 +1,19 @@
+.votecell {
+    text-align: center;
+}
 .vote-up, .vote-down { 
     display: block;
+}
+
+a:hover{    
+    cursor: pointer;
+    text-decoration: none;
+}
+
+table{
+    table-layout: fixed;
+}
+
+td{
+    word-wrap:break-word;
 }

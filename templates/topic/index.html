@@ -23,25 +23,45 @@
   </head>
   <body>
       
-    <div class="container">        
-        {{topic_list}}
+    <div class="container"> 
         <div id="topics" class="topics">
-            <table class="table">
+            <table class="table table-responsive">
               <tbody>
                 {% for topic in topic_list %}
                 <tr class="info">
-                  <td class="col-md-1 votecell" style="text-align: center;" >
+                  <td class="col-md-1 votecell">
                     <div class="votes" topic-id="{{topic.id}}">
                         <a class="glyphicon glyphicon-chevron-up vote-up" title="This topic is useful"></a>
-                        <span class="label label-primary num">{{topic.votes}}</span>
+                        <span class="label label-primary num" title="Total votes">{{topic.votes}}</span>
                         <a class="glyphicon glyphicon-chevron-down vote-down" title="This topic is not useful"></a>
                     </div>
                   </td>
-                  <td class="topiccell">{{topic.topic}}</td>
+                  <td class="col-md-11 topiccell">{{topic.topic}}</td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
+            {% if topic_list.has_other_pages %}
+                <ul class="pagination">
+                {% if topic_list.has_previous %}
+                    <li><a href="?page={{ users.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in topic_list.paginator.page_range %}
+                    {% if topic_list.number == i %}
+                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if topic_list.has_next %}
+                    <li><a href="?page={{ users.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+                </ul>
+            {% endif %}
         </div>
         <form action="/" method="post">
             {% csrf_token %}

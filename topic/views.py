@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 from .forms import TopicForm
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
@@ -25,10 +26,25 @@ def home(request):
     return redirect('/topic')
 
 def topic(request):
-    template = 'topic/index.html'  
+    template = 'topic/index.html' 
+    
+    #sort topic list based on the topic total votes
+    sorted_topics_list = sorted(topic_list, key=lambda k: k['votes'],reverse=True)
+    
+    #topic pagination with 20 topics per page
+    page = request.GET.get('page', 1)
+    paginator = Paginator(sorted_topics_list, 20)
+    try:
+        page_sorted_topics_list = paginator.page(page)
+    except PageNotAnInteger:
+        page_sorted_topics_list = paginator.page(1)
+    except EmptyPage:
+        page_sorted_topics_list = paginator.page(paginator.num_pages)
+    
     form = TopicForm()
+    
     context = {
-        'topic_list':topic_list,
+        'topic_list':page_sorted_topics_list,
         'form':form
     }
     return render(request,template,context)
